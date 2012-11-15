@@ -1,0 +1,6 @@
+DATABASES: Monday 8:00 AM
+UNIX: Tuesday 10:30 AM
+GRAPHICS: Monday 10:30 AM
+MOBILE: Friday 8:00 AM
+DSTRUCTS: Thursday 10:30 AM
+COMPARCH: Wednesday 10:30 AM

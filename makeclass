@@ -1,0 +1,36 @@
+#!/bin/bash
+# David Lopes, 2012
+# Simple C++ class creator script. 
+# Creates basic header and implemetation files for the specified
+# classnames. Implements empty constructor and destructor functions.
+
+# Usage example:
+# makeclass myclass
+# makeclass Particle ParticleSystem
+
+# PURPOSE: to do the busy work
+# IDEAS:
+## -> What kind of heavy lifting can we take care of?
+## -> allow templating
+## -> creating methods?
+## --> Keep in mind, we might want to redo this in perl, with emacs.
+## TODO: include private and public in templates
+## TODO: allow user to enter description of class, place in header comment
+
+if [ $# == 0 ]; then
+    echo "Usage: makeclass [classnames]"
+    exit
+fi
+
+for classname in $@; do
+    macro=$(echo $classname | tr '[:lower:]' '[:upper:]')
+
+    echo "$classname.h $classname.cpp"
+    cp ~/.scripts/.makeclass_templates/h.mct ${classname}.h
+    cp ~/.scripts/.makeclass_templates/cpp.mct ${classname}.cpp
+
+    ## Replace
+    sed -i '' "s/ClassName/$classname/g" ${classname}.{h,cpp}    
+    sed -i '' "s/CLASS_NAME/$macro/g" ${classname}.{h,cpp}
+
+done

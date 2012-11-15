@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Just shortcuts to ssh into nd servers
+
+# Usage example:
+## goto 
+## goto orchestra.cselab
+
+server="student00.cse"
+if [ $# -eq 1 ]; then
+    server=$1
+fi
+ssh dlopes@${server}.nd.edu

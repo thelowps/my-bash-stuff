@@ -1,0 +1,74 @@
+#!/bin/bash
+
+## David Lopes, 2012
+## A simple script that cleans up the current directory by removing specified files,
+## known here as "stains". 
+
+## FEATURES
+### -> The GLOBAL_STAINS global variable indicates the default stains that are removed.
+####   It is a string of space-separated words. The default is "*~ *.o"
+### -> Looks for a local file called .stains and removes those stains too. 
+####   This file should also be a list of space-separated file descriptions.
+
+### OPTIONS
+### -r (recursive) :
+#### cleans all local subdirectories recursively
+
+##  --- TODO ---
+### -> implement -v
+### -> look for a better way to implement file input into variables other than 'cat'
+
+
+
+## ------------------------------------------------------------------------ ##
+
+
+## SET FLAGS
+recursive="no"
+hidden="no"
+directories="."
+
+## READ FLAGS
+if [ "$1" == "-r" ]; then
+    recursive='yes'
+fi
+
+for argument in $@; do
+    if [ ${argument%%-*} == "-" ]; then
+	# Step through characters following, setting flags.
+	# For now, we don't allow more than one letter after a flag
+	if [ $argument == "-r" ]; then
+	    recursive = "yes"
+	fi
+
+    else # If we find something that is not a flag
+	directories=$argument	
+    fi
+done
+
+## RECURSIVE OPTION -- called with the -r flag
+if [ $recursive == "yes" ]; then
+
+    for file in *; do 
+	if [ -d "$file" ]; then
+	    (cd "$file" && clean $@)
+	fi
+    done
+
+fi
+
+## Runs a makefile clean command, if a makefile exists
+if [ -e makefile ] || [ -e Makefile ]; then
+    make clean
+fi
+
+## Build the stains variable and look for a local .stains file
+stains=$GLOBAL_STAINS
+if [ -e .stains ]; then
+    ## Look up input from file into shell scripts without using cat
+    stains=$stains\ "`cat .stains`"
+fi
+
+## Remove specified "stain" files. Do not remove directories.
+cd $directories
+rm -f $stains >&/dev/null

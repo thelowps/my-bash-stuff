@@ -1,0 +1,140 @@
+#!/bin/bash
+
+# Agenda script. Allows for easy insertion of tasks (to-do's) matched
+# with due dates or notes. Modifies ~/.agenda.txt
+
+## Data:
+### "Task to do" [date] [labels] [importance]
+
+## agenda + task [due date] [labels] [importance]
+### -> adds an item to the agenda. If there is no date, the task 
+###    becomes atemporal -- it is seen as "always due". The default
+###    importance is next-to-least importance.
+## agenda - [index]
+### -> checks off the item at the given index
+## agenda -- [index]
+### -> removes the item at the given index
+## agenda [constraint] [value]
+### -> Shows everything that is due in the given time period
+
+## Question: could I benefit from two different dates?
+## Idea: the tasks could contain links to files with more information, or
+##       to a website 
+## Yes, let's do this. for example:
+## agenda mobicom --> would open up a mobicom related file in data_dir
+
+# Display format:
+# 1 - i [X] Mobicom Homework    9 Nov 2012             -hw
+# 2 - I [ ] Research            9 Nov 2012             -meeting -research
+# 3 -   [!] Voice Lesson        9 Nov 2012 10:30 AM    -music
+
+##------------------------------------------------------------------------
+data_dir="/Users/admin/.scripts/.agenda_data"
+agenda_file="agenda.txt"
+
+
+if [ ! -d $data_dir ]; then
+    mkdir $data_dir
+fi
+cd $data_dir
+touch $agenda_file
+
+
+if [ "$1" == "+" ]; then
+    ## ADDING TO THE AGENDA
+    entries=$(wc -l "$agenda_file")
+    entries=$(echo $entries)
+    lines=${entries%% *}
+    entries=$(( $lines / 4 ))
+
+    index=$(( $entries + 1 )) ## TODO -- find better index
+    task="$2"
+    date="$3" ## TODO -- check for valid date
+    shift 3
+    importance="-"
+    while (( $# > 0 )); do 
+	if [ ${1:0:1} == "-" ]; then
+	    tags="${tags}$1 "
+	else
+	    importance=${1:0:1}
+	    echo "importance has been set to $importance"
+	fi
+	shift
+    done
+    #if [ -z "$tags" ]; then
+    #    tags=" "
+    #fi
+
+    echo "$index $task" >> $agenda_file
+    echo "$date" >> $agenda_file
+    echo "$importance -" >> $agenda_file
+    echo "$tags" >> $agenda_file
+
+    echo "Added task \"$task\" for $date"
+    echo "Tagged as: $tags -- Importance: $importance"
+    
+elif [ "$1" == "-" ]; then
+    ## CHECKING OFF FROM THE AGENDA
+    ## search agenda_file for matching index
+    i=0
+    while read line; do ## this method is dumb
+	if (( $i < 4 )); then (( i++ ))
+	else (( i = 1 )); fi
+	if (( i != 1 )); then continue; fi
+	if [ "$2" == ${line:0:1} ]; then
+	    echo "Checking off item number $2."
+	    # do that somehow? i really should fix up my file.
+	fi
+	    
+    done < $agenda_file
+    
+    ## check that one off
+    
+    
+elif [ "$1" == "--" ]; then
+    ## REMOVING FROM THE AGENDA
+    echo "Removing"
+
+elif [ "$1" == "wipe" ]; then
+    printf "Are you sure you want to wipe the agenda? [y/n]: "
+    while : ; do
+	read wipe
+	if [ $wipe == "y" ]; then 
+	    rm $agenda_file
+	    echo "Agenda cleared."
+	    break
+	elif [ $wipe == "n" ]; then 
+	    echo "Aborted."
+	    break
+	fi
+        printf "Please enter y or n: "
+    done
+    
+else 
+    ## DISPLAYING FROM THE AGENDA
+    entries=$(wc -l "$agenda_file")
+    entries=$(echo $entries)
+    lines=${entries%% *}
+    entries=$(( $lines / 4 ))
+
+    if [ $lines == 0 ]; then
+	echo "Agenda is empty."
+	exit
+    fi
+
+            #1 i [X] Mobicom Homework    9 Nov 2012             -hw
+    printf "        %-40s %30s %30s\n" TASK DATE TAGS
+    i=1
+    while read line; do
+	case $i in
+	    1 ) index="${line:0:1}"; task="${line:2}" ;;
+	    2 ) date="$line" ;;
+	    3 ) imp="${line:0:1}"; comp="${line:2:1}" ;;
+	    4 ) tags="$line"; i=0
+		printf "%d %c [%c] %-40s %30s %30s\n" $index $imp $comp "$task" "$date" "$tags" ;;
+	esac
+	(( i++ ))
+    done < "$agenda_file"
+    
+fi
+
