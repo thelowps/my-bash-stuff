@@ -2,39 +2,19 @@
 Tuesday
 I -
 -hw 
-2 Mobicom
-Monday
-i -
--hw 
-3 Research
+2 Research
 Tuesday
-i -
--research 
-4 Register for career fair
-Now
-I -
--internship 
-5 Amazon career application
-Soon
-I -
--internship 
-6 Data Structures
-Atemporal
-i -
--hw 
-7 Agenda Script
-atemporal
 - -
--personal 
-8 IAESTE Application
-Dec 1 2012
-i -
--internship -perth 
-9 Select and get approval for Perth Units
-Nov 19 2012
+-serim 
+3 Mobicom
+Monday
 I -
--perth 
-10 Stuff
-Nov 21 2012
+
+4 Databases Test
+Monday
 I -
--hai -dude 
+
+5 Comparch HW
+Tuesday
+- -
+
