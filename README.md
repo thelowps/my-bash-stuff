@@ -42,6 +42,7 @@ TODO:
 -> Allow user to select director(y|ies) to clean
 -> Allow option to append a directory's custom stains to its
    subdirectory's custom stains when cleaning recursively.
+-> Allow option to NOT run 'make clean', something like -n
 
 
 /**------------------------------------------------------------
@@ -88,3 +89,7 @@ Usage: drop FILE1, FILE2 ... DROPBOX[/subdirectory]
 Example: drop file.h file.cpp Graphics/hw10
 
 I need to think bigger.
+
+/**------------------------------------------------------------
+-- TODO --
+- Make a .bashrc file
