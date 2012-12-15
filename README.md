@@ -42,6 +42,7 @@ TODO:
 -> Allow user to select director(y|ies) to clean
 -> Allow option to append a directory's custom stains to its
    subdirectory's custom stains when cleaning recursively.
+-> Option to NOT run make clean
 
 
 /**------------------------------------------------------------

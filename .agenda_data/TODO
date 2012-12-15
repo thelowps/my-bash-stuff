@@ -1,8 +1,67 @@
+NOW --
+[x] shower
+[ ] packing
+[x] food
+[x] talk to kevin
+[x] prepare to give app over to flynn
+[x] ray tracing
+[x] talk to ndfcu
+[ ] scan I-94
+
+-- SCHEDULE -- 
+// WHENEVER YOU CAN //
+[x] Work on Serim App
+[x] Check Brazil flight information for accuracy
+[ ] Talk to NDFCU about how to access funds from abroad
+[x] Double-check OPT stuff, make sure you don't anything from SL
+[ ] Scan I-94, send to Sam Lockhart
+[x] Return iOS to VGA cables to Debartolo
+[x] Give SSN to Dian for $$
+
+// MONDAY //
+[x] Computer graphics -- get project working on lab computer
+[x] Data Structures Report
+[x] Start Comparch final project
+[x] ** Study for Comparch
+[x] Take medicine (Sudogest) at 2:00 AM or before bed, whichever
+    comes first
+[x] Make schedule to know when to schedule doctor's appointment
+
+// TUESDAY //
+[x] 10:15 AM -- Appointment at St. Liam's
+[x] 10:45 AM -- Schedule appointment in Chicago
+[x] Data structures report
+[x] ** Study for Comparch
+[x] Comparch final project
+[x] 5:15 PM -- Dinner with Serim, meet at Flynn's office
+
+// WEDNESDAY //
+[x] 10:30 AM -- Comparch Exam
+[x] Data Structures report due at 5:00 PM
+[x] Unix final exam (due Thursday at 5:00 PM) 
+[x] Comparch final project (due Thursday midnight)
+[x] ** Study for Data structures final
+
+// THURSDAY //
+[x] 10:30 AM -- Data Structures Exam
+[x] Comparch Final project (due midnight)
+[x] Unix final exam (due at 5:00 PM)
+[x] Graphics Report (due Friday at 5:00PM)
+[ ] Raytracing (do it soon so you can visit office hours)
+
+// FRIDAY //
+[x] Meet with Flynn and Poellabauer to pass off the app
+[x] Graphics Report (due at 5:00PM)
+[x] Put stuff in storage!
+[ ] Return Apple stuff. The Serim work is finally done.
+[ ] Pack
+
+
 -- PERTH --
 /**------------------------------------------
 -- TODO --
 -> Talk to NDFCU about how to access funds from abroad
-
+   
 /**------------------------------------------
 -- Visa stuff -- 
 -- ASSESMENT LEVEL 1: ELECTRONIC PROCESS --
@@ -13,39 +72,119 @@ Passport
 -> WRITE DOWN THE TRANSACTION REFERENCE NUMBER
 -> Print the email received (or save it, I guess)
 -> Print copy of visa, place in passport
-
+   
 -> CHECK WHAT KIND OF STUFF IS NECESSARY FOR
    BRAZILIANS APPLYING FOR A VISA FOR AUSTRALIA
-
-/**------------------------------------------
--- Things to bring --
--> Beach towel
-
+   
 /**------------------------------------------
 -- Safety tips --
 -> Make a copy of passport and credit card info
 -> Register with local US consulate
--> www.nd.edu/~ndabroad/Video/Video.htm
-
-
-
-
-
-
-/**-----------------------------------------
-/**-----------------------------------------
-/**-----------------------------------------
--- FDS --
-- Serim Meeting -- 15:00
-- King's Singers -- 19:00
-- Wreck-it Ralph -- 21:00
-
+-> www.nd.edu/~ndabroad/Video/Video.htm 
 
 /**-----------------------------------------
 /**-----------------------------------------
 SERIM
-Rename to "Retrieve Test Results"
-Card needs values printed on it
-Hough Transform
---> Better to isolate test strip rectangle and then count bright pixels after thresholding
-Dinner date with Serim
+[ ] Rename to "Retrieve Test Results"
+[ ] Card needs values printed on it
+[.] Test Strip area test
+[ ] Dinner date with Serim
+[ ] Save images before warping and editing
+[X] Save all images, including fails
+[X] Fix the memory leakkkkk
+[.] Add timing function
+[?] Use flood fill
+[ ] Revamp the wiki
+[ ] Put project on github
+[x] Use newer card layout
+[x] Send new layout to Dick
+[ ] Put question regarding memory corruption on stack overflow
+
+-------
+Serim Refactored App Todo:
+- "Select Product" label
+- Highlight selection in grid views
+
+Ideas:
+- Algorithm optimization
+-- AVCapture medium quality. Send raw data to SSAColorCardReader (maybe 
+   just register it directly as a delegate?). Crop this to a strip ROI,
+   bypass UIImage step and go straight to LuminanceSource to do the 
+   finder mark detection. Then, if we have found four finder marks, crop
+   to QR Code ROI and do the QR Code detection (maybe we can find a way
+   to bypass the UIImage step here too, without too much effort). Then,
+   if we have a valid QR Code, do the area test, etc.
+-- Look into thread priorities?
+-- ViewController instantiates SSAColorCardReader, which makes its own
+   instance of CaptureSessionManager. ViewController is delegate of SSA.
+   SSA continually calls [self.delegate cardReader:self didReadCardWith
+   Result:result], where result is a dictionary. There, seems easy enough.
+
+// For the meeting: //
+DONE:
+- App now has area test (still need experimental values)
+- App now has a built-in timer
+- App now has live video processing
+- App has been massively refactored
+--> We are using new features from XCode 4.5 and iOS 5 (ARC, storyboard,
+    some new classes).
+--> Memory leaks have mostly been dealt with (still need to check)
+--> Code is much more maintainable for the next person coming in
+- Some UI changes
+--> Preferences view is not a full tab anymore
+--> Tinkered with some visuals
+
+TODO:
+- Add "reset timer" option
+- Get values for area test
+- User can cancel a test rather than always save it
+- Algorithm optimizations
+- Database optimizations -- specifically parse requests. Use JSON?
+- Use floodfill (not necessary?)
+- Revamp wiki
+- LOOK INTO SUBSETDATA BUG. "pointer being freed was not allocated". How
+  could this be? -- now it's just a segfault... put it on SO
+- Fix the Instructions display somehow...
+
+/**-----------------------------------------
+PHONE MEETING
+- Next target - explosive tests
+- Ideas for the current app
+-> User downloading the app. Two different customer types: corporation 
+   telling its locations to use the app, and 
+-> Corporation situation: how do we manage that situation, their account?
+   How do we distribute this license?
+---> Use a secondary license thing for each company?
+
+-> App user interface:
+---> User defined fields, determined at the beginning, will determine the 
+     prompt. Predefined fields for each app that get uploaded with the
+     parse results. Sort on these user defined fields. User, Location, 
+     <variable prompt>. Customized data, pretty much. 
+-----> Regular user vs. Super user account?
+
+
+/*****------------------------------------------
+/*****------------------------------------------
+/*****------------------------------------------
+HANDING THE APP OVER --
+
+Upload code !
+Algorithm description
+--> First step: 
+Core database and Parse database and how they relate
+--> 
+Comprehensive bug list --
+--> Data corruption
+--> Parse bug
+Comprehensive usage documentation
+--> "Simple" ways to use it
+--> Obvious things to watch out for, things to go wrong
+
+
+/*****------------------------------------------
+/*****------------------------------------------
+AT BRAZIL
+[ ] Medical Appointment for Visa
+[ ] Certified copy of birth certificate (ask Ellen about this?)
+[ ] Fill out Epic forms

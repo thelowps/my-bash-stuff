@@ -1,0 +1,5 @@
+# this is a comment
+
+$address $s0
+$left $t1
+$right $t2

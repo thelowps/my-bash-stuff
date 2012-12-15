@@ -1,0 +1,64 @@
+Typing trying practicing my typing in colemak. I am attempting to write this with as few errors as possible. Hopefully I will succeed to some degree. There is a scary blanket on the screen right now. The asian lady is looking at the thing she uncovered. Sherlock Holmes seems to be a very good series. Holmes is a great character, created by Sir Arthur Conan Doyle. Watson is buying something Also, Holmes is fighting someone while Watson is donig the groceries. Funny that way. I seem to need more practice in... just vocabulary in general. The words like "something" or "anyway" or things like that, those are quick to type because I have had practice with them. Yet the less commmon words are the ones that get to me. I need to also take my time a little more. My fingers get a little jittery when they do not know what to type, and I end up getting random letters on screen. Apparently someone has died on screen. Apparently a word like someone might give me some trouble. Any "gh" combinations usually give me some trouble. might tright light flight right might though through thorough less than thorough more than though this has been more common vocab words than you can stand to listen to. This would be a boring conversation. nlrg myvf ukgy ghf hghf pyym abyvfghf tlceukdo cyimfach ghu iestn rusntiea. Sam cannot type in colemak. It's kind of funny. Unfortunately this alternative keyboard layout thing is probably a lost cause. There's really not enough motivation to make any of them happen for real. There's much less motivation for this than for, say, recycling, or charity, and people don't even properly do those. The right people slash organizations would have to be motivated. well, how about a top-down thing, where the people who really need the typing speed and finger health, like professional typists or code monkeys, make the shift, and the whole thing kind of trickles down? People's interests are piqued when the pros do it a certain way. Why wouldn't they want to do it? 
+
+I'm hijacking this old file because I need something to type in. Update, in case you are wondering: I've gotten much better at typing in Colemak, though I don't know if I've surpassed my previous speed in qwerty. Sometimes I feel lightning fast, and other times it's really hard to not make mistakes all the time. I guess it all depends on what I'm writing. Code is hard to write without mistakes because it's usually weird words in weird combinations. I guess. I dunno, maybe I should just code more. And be less of a wuss.
+Anyway, I need to think of something to work on. I could totally work on the E-Guit. That's a fun project, though it's not a game. But maybe I should move away from games for a little bit? This'll give me a good opportunity to learn Java better... "just move into the room above the fucking colemak" -- that is what i managed to reconstruct from Sam's little rant above. Anyway, the E-guit. Is this a good idea? Do I want to do this? Maybe I can do something in the way of a large scale project with more ppl involved...? But how to get the people, and how to get the interest... and how to make sure these people are good, and interested... Ugh. I really should just work on the E-Guit. That's fun, and not hard. It really shouldn't take me so long. Why would it take me so long? Why does this stuff have to take me so longggggg uggghh I'm such a slow coder. Damn it. I get hung up on planning and optimally organizing my classes and stuff. Maybe I should follow YAGNI more? But I like making things expandable... maybe I just need to get better at planning. Maybe I'll try to plan this thing out right now. Yay I can type really fast!!
+Ok, so we start from where we know. The tuning pegs need to be linked to each string. Okay, so each tuning peg is responsible for drawing itself. I'd love to write it out right now but I don't really know Java that well. Anyway, I've probably already figured this stuff out, but whatever. 
+
+-- Tuning peg functionality: let's limit it to the click and drag. It snaps to half-steps. So step one: detecting user input. Depending on what's best in terms of memory for Java, me might prefer to just make the whole screen a MouseListener or whatever -- that way we only have one mouselistener. I don't know if that makes a difference though. Anyway, once we have detected a click on the tuning peg, we have to track mouse movements. If we want to keep our model, where only one big screen object is a mouse listener, we can do that with mouse movements too. The screen, something like EGuitAppScreen or whatever, is what handles and dispenses user input to whomever needs it. Whenever something is clicked, EGuitAppScreen calls a certain function on that object, like userDidClick or something. This will be a virtual function in the abstract base class for on-screen stuff. That object the does whatever it needs to. In this case, the tuning peg would call appScreen.addToMouseMovementListenerList(this) and appScreen.addToMouseUnclickListenerList(this). The EGuitarAppScreen uses this array to know which objects it should notify when something does happen. So now, the tuning peg gets notified whenever there's movement. I'm not sure how the movement input works, but I'm assuming there's an easy way to find the deltaY component of any movement. We experimentally determine the exchange rate between vertical mouse movement distance and pitch bend. Actually, the mouse movement function probably passes the location of the mouse on screen -- even better. Just do the following: (mouseY - clickLocY) * exchangeRate = toneFraction. toneFraction is directly correlated to pitch bend and to the tuning animation because it is the fraction of the a tone that that the peg is being tuned to. So toneFraction=1 would mean that the peg is being tuned a half-step up, -1 means a half step down, and 2 is the maximum value due to pitch bend limitations. Sad face. toneFraction is used to determine the peg's animation. The peg sends its corresponding GuitarSting object (which owns it, I'm thinking) this toneFraction value through the function guitarString.tuneTo(int toneFraction), where -2<toneFraction<2. The guitar string then sets its pitch bend value based on this toneFraction, which is easy: midiChannel.setPitchBend( toneFraction*HALF_STEP_PITCH_BEND ). Yay! Now, we address the issue of stepping the GuitarString up (we can deal with snapping to half-steps later). The GuitarString object has tabs on its pitch (int midiPitch) and its toneFraction. There should be some global function that correlates midiPitchBend with a note letter. That way we can draw the letter on screen (char noteLetter). Alternatively, we could just pass the GuitarString its noteLetter as an argument in its constructor, and it could just increment and decrement it as it goes. Anyway, GuitarString knows its current pitch and future pitch (int midiPitch, nextMidiPitch). Actually, it doesn't need to save nextMidiPitch -- it can just calculate it when it needs it. When the string is struck, we simply int-typecast toneFraction and add it to midiPitch (this will be our nextMidiPitch) and then we subtract the int-typecast toneFraction from itself to get the nextToneFraction and nextMidiPitchBend. It then calls midiChannel.stopPlaying() and midiChannel.setPitchBend( nextMidiPitchBend ) and then midiChannel.playNote( nextMidiPitch ). This will give the guitar full stepping functionality. It should also update the tuning peg's toneFraction with nextToneFraction. The decimal part of these two should be the same so the animations will be unaffected. The maximum toneFraction should be placed in a constant, MAX_TONE_FRACTION=2. This can be used to calculate HALF_STEP_PITCH_BEND = [midi's pitch bend range] / (MAX_TONE_FRACTION*2). The tuning peg uses this to determine when to become unresponsive to more tuning: if( abs(toneFraction) > MAX_TONE_FRACTION ) {toneFraction = MAX_TONE_FRACTION;} This should be a clean way to keep the peg from tuning too far.
+
+Cool! I think I've solved some problems that I didn't before. Or at least, didn't try very hard to. I was probably too busy picking up the language and the API for mouse listening and GUI creation and stuff. Oh, and fighting with MIDI. Now, to tackle the snapping to half-notes problem. The peg should have a function called tune(int toneFraction) that does all the logic and updating necessary for tuning. The mouse input function then needs only to calculate the toneFraction and call this function. This is important because we will want to call tune() on other occasions. To deal with snapping, tuning by clicking on arrows (which we may implement later), or other possible features in which the peg will move without direct user mouse-drag input, we implement a runnable class called AutoPegTuner, as such:
+
+public class AutoPegTuner implements Runnable {
+       
+       private TuningPeg tuningPeg;
+       private float targetToneFraction;
+       private int* toneSteps; //Steps to take along the way to the target       
+
+       // This class animates the tuning of a TuningPeg.
+       public AutoPegTuner( TuningPeg tuningPeg, float targetToneFraction, float time = 0 ) {
+       	      this->tuningPeg = tuningPeg;
+	      this->targetToneFraction = targetToneFraction;
+	      
+	      // Create array of int steps along the way to the targetToneFraction
+	      // This would require some cool creative solution if we want a cool animation curve.
+	      // Bitworld has a pretty straightforward solution already for a linear interpolation.
+	      // Step 1: calculate amount of steps necessary.
+	      float SECONDS_PER_STEP = 1;
+	      float STEP_TIME_LENGTH = 0.01; //there is a sleep of 0.01 seconds between steps on the way to the target
+	      float diff = math.abs(tuningPeg.getToneFraction()) - math.abs(targetToneFraction);
+	      float totalTime = SECONDS_PER_STEP * difference;
+	      float stepsAmount = totalTime / STEP_TIME_LENGTH;
+	      
+	      toneSteps = new int[stepsAmount];
+	      // now, we interpolate.
+	      for( int i = 0; i < stepsAmount; ++i ) {
+	      	   toneSteps[i] = ...
+	      }
+
+       }
+
+       public void run () {
+       	      tuningPeg.setResponsive( false );
+	      for( int i = 0; i < stepsAmount; ++i ) {
+	      	   tuningPeg.tune( toneSteps[stepsAmount] );
+		   thread.sleep( STEP_TIME_LENGTH );
+	      }       	      
+	      tuningPeg.setResponsive( true );
+       }
+
+}
+
+
+
+-- Tuning when not striking string problem
+-- User interface with fretboard problem
+
+Now, we've got a couple of options for the other problem that arose. The problem is that if the string is not struck, currentMidiPitch is not updated.
+-> option: update the currentMidiPitch when the user releases the tuning peg. What would this cause?
+--> 
+
+
+------
+Oh boy. Npw I have to practice in qwerty. Because of parkinsons. Not really though: it's because I'm going to a programming challenge competition thing, the ACM. It's going to be a blast, even though we are totes gonna lose. There are some pretty cray dudes out there. Ok, I'm not that bad at QWerty -- in fact, I'm pretty quick if I am allowed to see the keyboard. This is how fast i tyope if i am allowd to see the keyboard.
+
+This is how fast I can type with access to a keyboard visually. (Kevin "Dat Ass" McGinn, the dick)
